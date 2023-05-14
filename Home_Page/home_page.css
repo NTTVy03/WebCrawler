@@ -1,0 +1,30 @@
+.body {
+    font-family: sans-serif;
+}
+
+.show {
+    border: dotted 2px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    /* height: 70vh */
+}
+
+.group {
+    height: 100%;
+    border-right: dotted 2px rgba(0, 0, 0, 0.2);
+}
+
+.member-img {
+    object-fit: contain;
+}
+
+.group-name {
+    color: rgba(33, 41, 186, 0.4);
+    text-align: center;
+}
+
+.video-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

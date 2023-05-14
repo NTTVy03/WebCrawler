@@ -1,0 +1,10 @@
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /* background-image: linear-gradient(60deg, rgba(140, 189, 15, 0.2), rgba(190, 29, 202, 0.2)); */
+}
+
+#add-left-border {
+    border-left: groove 3px rgba(0,0,0,0.5);
+}
