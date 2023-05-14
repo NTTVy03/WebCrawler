@@ -41,7 +41,7 @@ function renderCategories(categories) {
     html += `</ul>`
 
     // html +=
-    //     `<form class="d-flex" role="search">
+    //     `<form class="d-flex" role="searchw">
     //         <input class="searchText form-control me-2" type="search" placeholder="Nhập vào đây nè" aria-label="Search">
     //         <button id="search" class="btn btn-outline-success" type="submit">Search</button>
     //     </form>`
@@ -207,17 +207,23 @@ function renderListProduct(listPro) {
 
     for (let pro of listPro) {
         let k = VND.format(pro.Price);
-        html +=
-            `<a style="width: 12rem; text-decoration: none; align-items: center;" class="card border-3 border-secondary m-3"
-            href=${pro.Url}>
-                <img style="object-fit: contain; height: 40px;" class="card-img-top mt-1 mb-1"
-                    src=${pro.WebsiteID.Icon}>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <h5 class="text-danger">${k}</h5>
-                    </li>
-                </ul>
-            </a>`
+        try{
+            html +=
+                `<a style="width: 12rem; text-decoration: none; align-items: center;" class="card border-3 border-secondary m-3"
+                href=${pro.Url}>
+                    <img style="object-fit: contain; height: 40px;" class="card-img-top mt-1 mb-1"
+                        src=${pro.WebsiteID.Icon}>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h5 class="text-danger">${k}</h5>
+                        </li>
+                    </ul>
+                </a>`
+        }
+        catch(error) {
+            console.log("productID = ", pro._id);
+            console.log("error = ", error);
+        }
     }
 
     // console.log(html);
@@ -251,6 +257,7 @@ function loadData() {
 
 async function main() {
     _id = loadData();
+    console.log("Cmp = ", _id);
     proGroup = await getData(_id);
     
     let products = proGroup.Products;

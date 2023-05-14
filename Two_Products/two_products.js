@@ -169,7 +169,7 @@ async function getData(id) {
     // const URL = 'https://mmt-main-dbserver.vercel.app/api/product/645089b1949d7403165740df';
 
     // const URL = `https://mmt-main-dbserver.vercel.app/api/category/${id}`;
-    const URL = `https://db-mmt-2-nhat.vercel.app//api/category/${id}`;
+    const URL = `https://db-mmt-2-nhat.vercel.app/api/category/${id}`;
     
     let response = await fetch(URL, {
         method: 'GET',

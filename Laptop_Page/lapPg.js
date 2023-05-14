@@ -144,6 +144,52 @@ const searchText = document.querySelector('.searchText');
 const searchBtn = document.getElementById('search');
 let proArea;
 
+$('.btn-next').on('click', () => {
+    idPage++;
+    if (idPage > totalPages) {
+        idPage = totalPages;
+        return;
+    }
+    console.log(idPage);
+    if (idPage == totalPages) {
+        $('.btn-next').addClass('btn-no-active');
+    } else {
+        $('.btn-next').removeClass('btn-no-active');
+    }
+    // console.log(idPage);
+    const btnPrev = document.querySelector('.btn-prev');
+    if (idPage > 1) btnPrev.classList.remove('btn-no-active');
+
+
+    $('.number-page li').removeClass('active');
+    $(`.number-page li:eq(${idPage - 1})`).addClass('active');
+
+    getCurrentPage(idPage);
+    renderProduct(productArr);
+});
+
+$('.btn-prev').on('click', () => {
+    idPage--;
+    if (idPage <= 0) {
+        idPage = 1;
+        return;
+    }
+    console.log(idPage);
+
+    if (idPage == 1) {
+        $('.btn-prev').addClass('btn-no-active');
+    } else {
+        $('.btn-prev').removeClass('btn-no-active');
+    }
+    const btnNext = document.querySelector('.btn-next');
+    if (idPage < totalPages) btnNext.classList.remove('btn-no-active');
+    $('.number-page li').removeClass('active');
+    $(`.number-page li:eq(${idPage - 1})`).addClass('active');
+    getCurrentPage(idPage);
+    renderProduct(productArr);
+});
+
+
 async function getData() {
     // const URL = 'https://mmt-main-dbserver.vercel.app/api/category?quantity=100&type=laptop';
     const URL = 'https://db-mmt-2-nhat.vercel.app/api/category?quantity=100&type=laptop';
@@ -157,7 +203,6 @@ async function getData() {
 
     return await response.json();
 };
-
 
 function highlightText() {
     const title = document.querySelectorAll('.get-pro-title');
@@ -187,25 +232,45 @@ function renderProduct(product) {
             // console.log(formatedPrice)
             html +=
                 `<a href="../Compare_Page/compPg.html" style="text-decoration: none;" class="col-md-12 col-lg-4 mb-4 mb-lg-0 mt-3 go-to-compare-page">
-                <div class="card content__product__item" id="${item._id}">
-                    <img src=${item.Imgs[0]}
-                        class="card-img-top" alt=${item.Type} style="height: 250px; object-fit: contain;"/>
-                    <div class="m-3">
-                        <h6 class="get-pro-title mb-3"  style="height: 130px">${item.Name}</h6>
+                    <div class="card content__product__item" id="${item._id}">
+                        <img src=${item.Imgs[0]}
+                            class="card-img-top" alt=${item.Type} style="height: 250px; object-fit: contain;"/>
+                        <div class="m-3">
+                            <h6 class="get-pro-title mb-3"  style="height: 130px">${item.Name}</h6>
 
-                        <div class="d-flex justify-content-between">
-                            <p class="text-muted">Giá chỉ từ:</p>
-                            <h5 class="text-danger">${formatedPrice}</h5>
+                            <div class="d-flex justify-content-between">
+                                <p class="text-muted">Giá chỉ từ:</p>
+                                <h5 class="text-danger">${formatedPrice}</h5>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a> `
+                 </a> `
             return html;
         }
     });
     // console.log(html);
     document.getElementById('product').innerHTML = html;
     highlightText();
+
+
+
+
+
+    // add click event
+    $('.go-to-compare-page').click(function() {
+        console.log("Go to compare page");
+        let id = this.querySelector(".card.content__product__item").id;
+        console.log("Laptop = ", id);
+
+        // Chuyển đổi đối tượng thành một chuỗi JSON
+        let idJSON = JSON.stringify(id);
+
+        // Lưu trữ chuỗi JSON vào localStorage với một khóa bất kỳ (ví dụ: "user")
+        sessionStorage.setItem("groupID", idJSON);
+
+        // Chuyển hướng sang trang thứ hai (ví dụ: page2.html)
+        // window.location.href = "../Compare_Page/compPg.html";
+    })
 }
 
 function renderListPage(totalPages) {
@@ -272,13 +337,16 @@ pageConfig.addEventListener('change', () => {
     idPage = 1;
     perPage = Number(pageConfig.value);
     getCurrentPage(idPage);
+    totalPages = Math.ceil(productArr.length / perPage);
+
+    console.log("totalPages = ", totalPages);
     initRender(productArr, totalPages);
-    if (totalPages == 1) {
-        $('.btn-prev').addClass('btn-no-active');
-        $('.btn-next').addClass('btn-no-active');
-    } else {
+    
+    $('.btn-prev').addClass('btn-no-active');
+    $('.btn-next').addClass('btn-no-active');
+    
+    if(totalPages > 1) 
         $('.btn-next').removeClass('btn-no-active');
-    }
     changePage();
 });
 
@@ -290,8 +358,10 @@ sortConfig.addEventListener('change', () => {
     })
 
     initRender(productArr, totalPages);
+    changePage();
 });
 
+// Nhảy trang
 function changePage() {
     const idPages = document.querySelectorAll('#number-page li');
     const a = document.querySelectorAll('#number-page li a');
@@ -314,43 +384,6 @@ function changePage() {
         };
     }
 }
-
-$('.btn-next').on('click', () => {
-    idPage++;
-    if (idPage > totalPages) {
-        idPage = totalPages;
-    }
-    if (idPage == totalPages) {
-        $('.btn-next').addClass('btn-no-active');
-    } else {
-        $('.btn-next').removeClass('btn-no-active');
-    }
-    // console.log(idPage);
-    const btnPrev = document.querySelector('.btn-prev');
-    if (idPage > 1) btnPrev.classList.remove('btn-no-active');
-    $('.number-page li').removeClass('active');
-    $(`.number-page li:eq(${idPage - 1})`).addClass('active');
-    getCurrentPage(idPage);
-    renderProduct(productArr);
-});
-
-$('.btn-prev').on('click', () => {
-    idPage--;
-    if (idPage <= 0) {
-        idPage = 1;
-    }
-    if (idPage == 1) {
-        $('.btn-prev').addClass('btn-no-active');
-    } else {
-        $('.btn-prev').removeClass('btn-no-active');
-    }
-    const btnNext = document.querySelector('.btn-next');
-    if (idPage < totalPages) btnNext.classList.remove('btn-no-active');
-    $('.number-page li').removeClass('active');
-    $(`.number-page li:eq(${idPage - 1})`).addClass('active');
-    getCurrentPage(idPage);
-    renderProduct(productArr);
-});
 
 // MUST CHECK
 function brandRender(brandList) {
@@ -402,6 +435,8 @@ async function main() {
             }
         }
         if (cntChecked === 0) productArr = product;
+
+        totalPages = 
         getCurrentPage(1);
         initRender(productArr, totalPages);
     });
@@ -422,25 +457,6 @@ async function main() {
         getCurrentPage(1);
         initRender(productArr, totalPages);
     });
-    
-    // add click product listener
-    proArea = document.querySelectorAll('.go-to-compare-page');
-
-    proArea.forEach((area) => {
-        area.addEventListener('click', function (event) {
-            let id = this.querySelector(".card.content__product__item").id;
-            console.log(id);
-
-            // Chuyển đổi đối tượng thành một chuỗi JSON
-            let idJSON = JSON.stringify(id);
-
-            // Lưu trữ chuỗi JSON vào localStorage với một khóa bất kỳ (ví dụ: "user")
-            sessionStorage.setItem("groupID", idJSON);
-
-            // Chuyển hướng sang trang thứ hai (ví dụ: page2.html)
-            // window.location.href = "../Compare_Page/compPg.html";
-        });
-    })
 }
 
 main();
